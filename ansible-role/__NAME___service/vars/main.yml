@@ -1,3 +1,13 @@
 ---
-quadlet_service_config_modes:
-  __NAME__.env: '0600'
+__NAME___service_config_defaults:  # noqa: var-naming[pattern]
+  EXAMPLE_LOG_LEVEL: info
+
+__NAME___service_memory_defaults:  # noqa: var-naming[pattern]
+  main: 256M
+
+quadlet_service_required:
+  service_port: '^[0-9]+$'
+  __NAME___service_password:
+quadlet_service_secrets:
+  __NAME___service_password: "{{ __NAME___service_password }}"
+quadlet_service_memory: "{{ __NAME___service_memory_defaults | combine(__NAME___service_memory) }}"
