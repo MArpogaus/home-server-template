@@ -58,10 +58,11 @@ short sentences, one meaning per word, and the condition before the command.
   `/var/log/journal` or `/dev/log` carries neither: relabelling it breaks the
   service that owns it.
 - Pin image tags to a major/minor. `AutoUpdate=registry` follows the tag.
-- Every container gets a `Memory=` ceiling. If the entrypoint runs as root and
-  switches user or fixes ownership, add `AddCapability=SETUID SETGID` (`CHOWN`,
-  ...) to that container. Add a comment that names the step that needs it. Try
-  without the capability first: an image with `USER` set needs nothing.
+- Every container gets a ceiling in `<name>_service_memory_defaults`. If the
+  entrypoint runs as root and switches user or fixes ownership, add
+  `AddCapability=SETUID SETGID` (`CHOWN`, ...) to that container. Add a comment
+  that names the step that needs it. Try without the capability first: an
+  image with `USER` set needs nothing.
 - Add `HealthCmd` + `HealthOnFailure=kill` only after you ran the check against
   the image. A wrong check plus `kill` restarts a healthy container forever.
 - Logs go to stdout. `quadlets/container.d/log.conf` sets

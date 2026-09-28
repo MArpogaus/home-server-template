@@ -1,3 +1,0 @@
-[Pod]
-PodName=__NAME__
-PublishPort=127.0.0.1:__PORT__:80
