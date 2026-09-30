@@ -86,11 +86,12 @@ It makes the home a Btrfs subvolume with mode `0750`, with a snapshot timer.
 It also enables linger and the user's `podman-auto-update.timer`.
 
 `/etc/containers/policy.json` admits the image repositories that the services
-declare, and the signed ones that the OS image's own policy admits. `base_setup` reads them from the `*_image` variables in
-`defaults/main.yml` and from the `<name>_service_*_image` host variables. A
-reference names `registry/namespace/name`, such as `docker.io/library/nginx`; a
-shorter one fails the deploy. An image under `ghcr.io/marpogaus` needs this
-project's cosign signature.
+declare, and the signed ones that the OS image's own policy admits.
+`base_setup` reads them from the `*_image` variables in `defaults/main.yml` and
+from the `<name>_service_*_image` host variables. A reference names
+`registry/namespace/name`, such as `docker.io/library/nginx`; a shorter one
+fails the deploy. An image under `ghcr.io/marpogaus` needs this project's
+cosign signature.
 
 A role may also read `base_setup_services`, notify the `Reload systemd` handler
 of `base_setup` and write metrics into `base_setup_textfile_dir`.
