@@ -49,4 +49,4 @@ The branch flow, the hooks, the releases and the house style are in
   preset that `.github/renovate.json` extends.
 - `home-server` checks out a service made from this template in
   `services/<name>`. `home-server/CONTRIBUTING.md` says how a change reaches the
-  pinned version.
+  pin.
