@@ -64,9 +64,9 @@ the same way. A service has only the ones that apply to it.
   inventory file only, because a second file replaces it.
 - A config file carries no credential. A container reads a secret through
   `Secret=`, as a file in `/run/secrets/` or as an environment variable.
-- A setting that the role needs to work, such as a port, a path or an access
-  rule, stays in the Quadlet or wins the merge. Its README says which, or that
-  the config can change every key.
+- A setting that the role needs to work stays in the Quadlet or wins the
+  merge. Such a setting is a port, a path or an access rule. Its README says
+  which, or that the config can change every key.
 - `true` and `false` become the app's own words, such as `true` or `yes`.
 
 ## Role contract
@@ -81,9 +81,9 @@ entry of `base_setup_services`, and passes:
 | `service_repo` | `<playbook dir>/services/__NAME__` |
 | `service_port` | the `port` of its `base_setup_services` entry, or none |
 
-Before that, `base_setup` creates the user with its `uid` and subuid range, the
-home as a Btrfs subvolume with mode `0750`, a snapshot timer for it, linger and
-the user's `podman-auto-update.timer`.
+Before that, `base_setup` creates the user with its `uid` and subuid range.
+It makes the home a Btrfs subvolume with mode `0750`, with a snapshot timer.
+It also enables linger and the user's `podman-auto-update.timer`.
 
 `/etc/containers/policy.json` admits only the image repositories that the
 services declare. `base_setup` reads them from the `*_image` variables in
