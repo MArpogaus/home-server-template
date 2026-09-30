@@ -51,7 +51,7 @@ the same way. A service has only the ones that apply to it.
 | `<name>_service_<credential>` | `defaults/main.yml`, empty | A credential; `quadlet_service` stores it, or a value made from it, as a Podman secret named in `quadlet_service_secrets` |
 | `<name>_service_hostname` | `defaults/main.yml`, empty | The public hostname; with an entry in `bunker_service_sites`, the proxy puts the service on it |
 | `<name>_service_config` | `defaults/main.yml`, `{}` | The user's settings for the app, in the app's own keys |
-| `<name>_service_config_defaults` | `vars/main.yml` | The role's generic settings; `<name>_service_config` is merged over them |
+| `<name>_service_config_defaults` | `vars/main.yml` | The role's generic settings; `<name>_service_config` merges over them |
 | `<name>_service_memory` | `defaults/main.yml`, `{}` | Memory ceilings per container, keyed by the container name without `<name>-` |
 | `<name>_service_memory_defaults` | `vars/main.yml` | The ceilings the role ships |
 | `<name>_service_*_image` | `defaults/main.yml` | The images |
@@ -85,12 +85,12 @@ Before that, `base_setup` creates the user with its `uid` and subuid range, the
 home as a Btrfs subvolume with mode `0750`, a snapshot timer for it, linger and
 the user's `podman-auto-update.timer`.
 
-`base_setup` admits in `/etc/containers/policy.json` only the repositories of
-the `*_image` variables in `defaults/main.yml` and of the
-`<name>_service_*_image` host variables. A reference names
-`registry/namespace/name`, such as `docker.io/library/nginx`; a shorter one
-fails the deploy. An image under `ghcr.io/marpogaus` needs this project's
-cosign signature.
+`/etc/containers/policy.json` admits only the image repositories that the
+services declare. `base_setup` reads them from the `*_image` variables in
+`defaults/main.yml` and from the `<name>_service_*_image` host variables. A
+reference names `registry/namespace/name`, such as `docker.io/library/nginx`; a
+shorter one fails the deploy. An image under `ghcr.io/marpogaus` needs this
+project's cosign signature.
 
 A role may also read `base_setup_services`, notify the `Reload systemd` handler
 of `base_setup` and write metrics into `base_setup_textfile_dir`.
@@ -124,7 +124,7 @@ Nothing else writes into the Quadlet directory: the next change deletes it.
 | `quadlet_service_restart` | `false` | `true` restarts the pod for a reason of the role |
 | `quadlet_service_extra_files` | `[]` | More files: `dest` plus `src` or `content` |
 
-`vars/main.yml` of this skeleton shows all three.
+`vars/main.yml` of this skeleton sets the first three.
 
 ## Monitoring
 
