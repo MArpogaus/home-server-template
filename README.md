@@ -105,7 +105,7 @@ The role creates its data directories, then imports `quadlet_service` from
 - packs `quadlets/`, its own `container.d/` drop-ins and the extra files into
   one reproducible archive. It renders each `.j2` file without the suffix and
   copies the other files. It adds a `Memory=` drop-in per container. Its own
-  drop-ins set the restart policy,
+  drop-ins put every container into `<name>.pod` and set the restart policy,
   `AutoUpdate=registry`, `DropCapability=ALL`, `NoNewPrivileges=true` and
   `PidsLimit=512`.
 - compares the archive with the one it last unpacked on the host. When they
