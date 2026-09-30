@@ -122,7 +122,7 @@ Nothing else writes into the Quadlet directory: the next change deletes it.
 | `quadlet_service_secrets` | `{}` | Secret name to its value; an empty value is an optional secret that is not set |
 | `quadlet_service_memory` | `{}` | Container name without `<name>-` to its ceiling |
 | `quadlet_service_restart` | `false` | `true` restarts the pod for a reason of the role |
-| `quadlet_service_extra_files` | `[]` | More files: `dest` plus `src` or `content` |
+| `quadlet_service_extra_files` | `[]` | More files, each a `dest` and its `content` |
 
 `vars/main.yml` of this skeleton sets the first three.
 
