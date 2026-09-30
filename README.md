@@ -5,8 +5,10 @@ Quadlet pod. `__NAME__` marks the service name.
 
 Copy it to `home-server-<name>`, then rename the paths and replace the
 placeholders in the file contents, and delete the placeholder rule in
-`.github/renovate.json`. The name is the Linux user, the pod, the
-`service` label, the role `<name>_service` and the variable prefix
+`.github/renovate.json`. Replace the sections "Configuration interface", "Role
+contract" and "Monitoring" of this README, and "Rules a service follows" of
+`CONTRIBUTING.md`, with a line that points here. The name is the Linux user,
+the pod, the `service` label, the role `<name>_service` and the variable prefix
 `<name>_service_`. `home-server/README.md`, "Adding a service", has the steps
 outside this repository.
 
