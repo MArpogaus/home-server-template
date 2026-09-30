@@ -92,6 +92,9 @@ the `*_image` variables in `defaults/main.yml` and of the
 fails the deploy. An image under `ghcr.io/marpogaus` needs this project's
 cosign signature.
 
+A role may also read `base_setup_services`, notify the `Reload systemd` handler
+of `base_setup` and write metrics into `base_setup_textfile_dir`.
+
 The role creates its data directories, then imports `quadlet_service` from
 `home-server`. `quadlet_service`:
 
