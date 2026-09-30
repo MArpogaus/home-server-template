@@ -42,8 +42,9 @@ short sentences, one meaning per word, and the condition before the command.
   reaches the other pods", has the reasoning and the traps.
 - To reach a port that another pod published on the host loopback, put
   `Network=pasta:-T,<port>` on this pod and use `127.0.0.1:<port>`; repeat
-  `-T,<port>` for each port. The pod reaches no other host loopback port. The
-  default host address reaches routable addresses only.
+  `-T,<port>` for each port. `home-server-monitoring/README.md`, "Specifics",
+  shows it. The proxy is the exception: it reaches its upstreams through
+  `--map-host-loopback`, as `home-server-bunker/README.md` says.
 - Inside a pod use `127.0.0.1:<port>`. A rootless pod binds IPv4 only, and
   `localhost` resolves to `::1` first.
 - Order the Quadlet sections `[Unit] [Container] [Service] [Install]`.
