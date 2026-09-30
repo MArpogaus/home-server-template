@@ -58,7 +58,8 @@ short sentences, one meaning per word, and the condition before the command.
   for SELinux on each start, and nothing else does. A host path such as
   `/var/log/journal` or `/dev/log` carries neither: relabelling it breaks the
   service that owns it.
-- Pin image tags to a major/minor. `AutoUpdate=registry` follows the tag.
+- Pin each image to a tag. `AutoUpdate=registry` follows the tag, and Renovate
+  moves it.
 - Every container gets a ceiling in `<name>_service_memory_defaults`. If the
   entrypoint runs as root and switches user or fixes ownership, add
   `AddCapability=SETUID SETGID` (`CHOWN`, ...) to that container. Add a comment
