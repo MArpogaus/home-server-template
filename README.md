@@ -5,8 +5,10 @@ Quadlet pod. `__NAME__` marks the service name.
 
 Copy it to `home-server-<name>`, then rename the paths and replace the
 placeholders in the file contents, and delete the placeholder rule in
-`.github/renovate.json`. The name is the Linux user, the pod, the
-`service` label, the role `<name>_service` and the variable prefix
+`.github/renovate.json`. Replace the sections "Configuration interface", "Role
+contract" and "Monitoring" of this README, and "Rules a service follows" of
+`CONTRIBUTING.md`, with a line that points here. The name is the Linux user,
+the pod, the `service` label, the role `<name>_service` and the variable prefix
 `<name>_service_`. `home-server/README.md`, "Adding a service", has the steps
 outside this repository.
 
@@ -49,7 +51,7 @@ the same way. A service has only the ones that apply to it.
 | `<name>_service_<credential>` | `defaults/main.yml`, empty | A credential; `quadlet_service` stores it, or a value made from it, as a Podman secret named in `quadlet_service_secrets` |
 | `<name>_service_hostname` | `defaults/main.yml`, empty | The public hostname; with an entry in `bunker_service_sites`, the proxy puts the service on it |
 | `<name>_service_config` | `defaults/main.yml`, `{}` | The user's settings for the app, in the app's own keys |
-| `<name>_service_config_defaults` | `vars/main.yml` | The role's generic settings; `<name>_service_config` is merged over them |
+| `<name>_service_config_defaults` | `vars/main.yml` | The role's generic settings; `<name>_service_config` merges over them |
 | `<name>_service_memory` | `defaults/main.yml`, `{}` | Memory ceilings per container, keyed by the container name without `<name>-` |
 | `<name>_service_memory_defaults` | `vars/main.yml` | The ceilings the role ships |
 | `<name>_service_*_image` | `defaults/main.yml` | The images |
@@ -83,12 +85,15 @@ Before that, `base_setup` creates the user with its `uid` and subuid range, the
 home as a Btrfs subvolume with mode `0750`, a snapshot timer for it, linger and
 the user's `podman-auto-update.timer`.
 
-`base_setup` admits in `/etc/containers/policy.json` only the repositories of
-the `*_image` variables in `defaults/main.yml` and of the
-`<name>_service_*_image` host variables. A reference names
-`registry/namespace/name`, such as `docker.io/library/nginx`; a shorter one
-fails the deploy. An image under `ghcr.io/marpogaus` needs this project's
-cosign signature.
+`/etc/containers/policy.json` admits only the image repositories that the
+services declare. `base_setup` reads them from the `*_image` variables in
+`defaults/main.yml` and from the `<name>_service_*_image` host variables. A
+reference names `registry/namespace/name`, such as `docker.io/library/nginx`; a
+shorter one fails the deploy. An image under `ghcr.io/marpogaus` needs this
+project's cosign signature.
+
+A role may also read `base_setup_services`, notify the `Reload systemd` handler
+of `base_setup` and write metrics into `base_setup_textfile_dir`.
 
 The role creates its data directories, then imports `quadlet_service` from
 `home-server`. `quadlet_service`:
@@ -100,7 +105,7 @@ The role creates its data directories, then imports `quadlet_service` from
 - packs `quadlets/`, its own `container.d/` drop-ins and the extra files into
   one reproducible archive. It renders each `.j2` file without the suffix and
   copies the other files. It adds a `Memory=` drop-in per container. Its own
-  drop-ins set the restart policy,
+  drop-ins put every container into `<name>.pod` and set the restart policy,
   `AutoUpdate=registry`, `DropCapability=ALL`, `NoNewPrivileges=true` and
   `PidsLimit=512`.
 - compares the archive with the one it last unpacked on the host. When they
@@ -117,9 +122,9 @@ Nothing else writes into the Quadlet directory: the next change deletes it.
 | `quadlet_service_secrets` | `{}` | Secret name to its value; an empty value is an optional secret that is not set |
 | `quadlet_service_memory` | `{}` | Container name without `<name>-` to its ceiling |
 | `quadlet_service_restart` | `false` | `true` restarts the pod for a reason of the role |
-| `quadlet_service_extra_files` | `[]` | More files: `dest` plus `src` or `content` |
+| `quadlet_service_extra_files` | `[]` | More files, each a `dest` and its `content` |
 
-`vars/main.yml` of this skeleton shows all three.
+`vars/main.yml` of this skeleton sets the first three.
 
 ## Monitoring
 
@@ -150,10 +155,9 @@ memory alerts.
 
 ## LLM coding tools
 
-This project is developed with LLM-based coding tools. They write most of the
-code and documentation. The maintainer sets the goals and the design, reviews
-every change and is responsible for it. Changes are tested on a VM before they
-reach a host.
+LLM-based coding tools write most of the code and documentation of this
+project. The maintainer sets the goals and the design, reviews every change and
+is responsible for it. Each change runs on a VM before it reaches a host.
 
 ## License
 
