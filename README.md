@@ -85,7 +85,9 @@ entry of `base_setup_services`, and passes:
 
 Before that, `base_setup` creates the user with its `uid` and subuid range.
 It makes the home a Btrfs subvolume with mode `0750`, with a snapshot timer.
-It also enables linger and the user's `podman-auto-update.timer`.
+It also enables linger and the user's `podman-auto-update.timer`. The user
+and its subuids reach no private network (`home-server/README.md`,
+"Security").
 
 `/etc/containers/policy.json` admits the image repositories that the services
 declare, and the signed ones that the OS image's own policy admits.
