@@ -62,6 +62,8 @@ the same way. A service has only the ones that apply to it.
 - The config merges recursively: a nested dict merges, a list replaces the
   default list. The memory dict merges key by key. Set such a dict in one
   inventory file only, because a second file replaces it.
+- A service with a variable number of accounts takes one dict keyed by account
+  name, such as `ntfy_service_users`, instead of one credential variable each.
 - A config file carries no credential. A container reads a secret through
   `Secret=`, as a file in `/run/secrets/` or as an environment variable.
 - A setting that the role needs to work stays in the Quadlet or wins the
@@ -83,7 +85,9 @@ entry of `base_setup_services`, and passes:
 
 Before that, `base_setup` creates the user with its `uid` and subuid range.
 It makes the home a Btrfs subvolume with mode `0750`, with a snapshot timer.
-It also enables linger and the user's `podman-auto-update.timer`.
+It also enables linger and the user's `podman-auto-update.timer`. The user
+and its subuids reach no private network (`home-server/README.md`,
+"Security").
 
 `/etc/containers/policy.json` admits the image repositories that the services
 declare, and the signed ones that the OS image's own policy admits.
