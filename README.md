@@ -3,13 +3,24 @@
 A skeleton to copy for a new service: an Ansible role and a rootless Podman
 Quadlet pod. `__NAME__` marks the service name.
 
-Copy it to `home-server-<name>`, then rename the paths and replace the
-placeholders in the file contents, and delete the placeholder rule in
-`.github/renovate.json`. Replace the sections "Configuration interface", "Role
-contract" and "Monitoring" of this README, and "Rules a service follows" of
-`CONTRIBUTING.md`, with a line that points here. The name is the Linux user,
-the pod, the `service` label, the role `<name>_service` and the variable prefix
-`<name>_service_`. `home-server/README.md`, "Adding a service", has the steps
+Copy it beside this repository with the commands below. The name is the Linux
+user, the pod, the `service` label, the role `<name>_service` and the variable
+prefix `<name>_service_`, so it takes only `a-z`, `0-9` and `_`, starts with
+a letter, and is not `core` or `root`.
+
+```bash
+name=<name>
+git -C home-server-template archive --prefix="home-server-$name/" HEAD | tar -x
+cd "home-server-$name"
+find . -depth -name '*__NAME__*' -execdir sh -c 'mv "$1" "$(printf %s "$1" | sed "s/__NAME__/$2/g")"' _ {} "$name" \;
+grep -rl __NAME__ . | xargs sed -i "s/__NAME__/$name/g"
+grep -rl 'noqa: var-naming' . | xargs sed -i 's/ *# noqa: var-naming\[pattern\]//'
+```
+
+Then delete the placeholder rule in `.github/renovate.json`. Replace the
+sections "Configuration interface", "Role contract" and "Monitoring" of this
+README, and "Rules a service follows" of `CONTRIBUTING.md`, with a line that
+points here. `home-server/README.md`, "Adding a service", has the steps
 outside this repository.
 
 | Container | Job | Default memory ceiling |
@@ -55,10 +66,10 @@ the same way. A service has only the ones that apply to it.
 | `<name>_service_memory` | `defaults/main.yml`, `{}` | Memory ceilings per container, keyed by the container name without `<name>-` |
 | `<name>_service_memory_defaults` | `vars/main.yml` | The ceilings the role ships |
 | `<name>_service_*_image` | `defaults/main.yml` | The images |
-| `port` of the `base_setup_services` entry | `home-server` inventory | The pod's loopback port, `service_port` in the role |
+| `port` of the `base_setup_services` entry | the deployment directory | The pod's loopback port, `service_port` in the role |
 
 - The defaults are generic: empty means off. A setting of one deployment, such
-  as a country, belongs in its inventory.
+  as a country, belongs in its deployment directory.
 - The config merges recursively: a nested dict merges, a list replaces the
   default list. The memory dict merges key by key. Set such a dict in one
   inventory file only, because a second file replaces it.
@@ -66,6 +77,8 @@ the same way. A service has only the ones that apply to it.
   name, such as `ntfy_service_users`, instead of one credential variable each.
 - A config file carries no credential. A container reads a secret through
   `Secret=`, as a file in `/run/secrets/` or as an environment variable.
+- A credential that the service reads at its first start only says so in the
+  service's README, with the steps to change it.
 - A setting that the role needs to work stays in the Quadlet or wins the
   merge. Such a setting is a port, a path or an access rule. Its README says
   which, or that the config can change every key.
