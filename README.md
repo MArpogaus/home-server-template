@@ -55,10 +55,10 @@ the same way. A service has only the ones that apply to it.
 | `<name>_service_memory` | `defaults/main.yml`, `{}` | Memory ceilings per container, keyed by the container name without `<name>-` |
 | `<name>_service_memory_defaults` | `vars/main.yml` | The ceilings the role ships |
 | `<name>_service_*_image` | `defaults/main.yml` | The images |
-| `port` of the `base_setup_services` entry | `home-server` inventory | The pod's loopback port, `service_port` in the role |
+| `port` of the `base_setup_services` entry | the deployment directory | The pod's loopback port, `service_port` in the role |
 
 - The defaults are generic: empty means off. A setting of one deployment, such
-  as a country, belongs in its inventory.
+  as a country, belongs in its deployment directory.
 - The config merges recursively: a nested dict merges, a list replaces the
   default list. The memory dict merges key by key. Set such a dict in one
   inventory file only, because a second file replaces it.
