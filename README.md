@@ -5,8 +5,8 @@ Quadlet pod. `__NAME__` marks the service name.
 
 Copy it beside this repository with the commands below. The name is the Linux
 user, the pod, the `service` label, the role `<name>_service` and the variable
-prefix `<name>_service_`, so it takes only `a-z`, `0-9` and `_` and starts with
-a letter.
+prefix `<name>_service_`, so it takes only `a-z`, `0-9` and `_`, starts with
+a letter, and is not `core` or `root`.
 
 ```bash
 name=<name>
