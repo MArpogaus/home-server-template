@@ -11,3 +11,4 @@ __NAME___service_hostname: ""  # noqa: var-naming[pattern]
 __NAME___service_config: {}  # noqa: var-naming[pattern]
 # Memory ceilings per container, merged over __NAME___service_memory_defaults.
 __NAME___service_memory: {}  # noqa: var-naming[pattern]
+__NAME___service_cpu: {}  # noqa: var-naming[pattern]

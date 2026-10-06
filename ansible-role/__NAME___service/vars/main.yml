@@ -4,6 +4,7 @@ __NAME___service_config_defaults:  # noqa: var-naming[pattern]
 
 __NAME___service_memory_defaults:  # noqa: var-naming[pattern]
   main: 256M
+__NAME___service_cpu_defaults: {}  # noqa: var-naming[pattern]
 
 quadlet_service_required:
   service_port: '^[0-9]+$'
@@ -11,3 +12,4 @@ quadlet_service_required:
 quadlet_service_secrets:
   __NAME___service_password: "{{ __NAME___service_password }}"
 quadlet_service_memory: "{{ __NAME___service_memory_defaults | combine(__NAME___service_memory) }}"
+quadlet_service_cpu: "{{ __NAME___service_cpu_defaults | combine(__NAME___service_cpu) }}"
