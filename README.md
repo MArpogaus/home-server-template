@@ -68,6 +68,7 @@ the same way. A service has only the ones that apply to it.
 | `<name>_service_memory_defaults` | `vars/main.yml` | The ceilings the role ships |
 | `<name>_service_cpu` | `defaults/main.yml`, `{}` | CPU quotas per container, in the same keys; a container without one has no CPU limit |
 | `<name>_service_cpu_defaults` | `vars/main.yml` | The quotas the role ships, often `{}` |
+| `<name>_service_db_dump_retention_days` | `defaults/main.yml`, `30` | Dump age before pruning; only a service that sets `quadlet_service_db_dump` |
 | `<name>_service_*_image` | `defaults/main.yml` | The images |
 | `port` of the `base_setup_services` entry | the deployment directory | The pod's loopback port, `service_port` in the role |
 
@@ -122,6 +123,8 @@ The role creates its data directories, then imports `quadlet_service` from
 - checks `quadlet_service_required`, that `quadlet_service_memory` names
   every container and nothing else, and that `quadlet_service_cpu` names only
   containers.
+- with `quadlet_service_db_dump` set, runs `pg_dumpall` into the service
+  subvolume before each snapshot and prunes old dumps.
 - stores `quadlet_service_secrets` as Podman secrets. It replaces a secret
   whose value changed and then restarts the pod.
 - packs `quadlets/`, its own `container.d/` drop-ins and the extra files into
@@ -146,6 +149,7 @@ Nothing else writes into the Quadlet directory: the next change deletes it.
 | `quadlet_service_secrets` | `{}` | Secret name to its value; an empty value is an optional secret that is not set |
 | `quadlet_service_memory` | `{}` | Container name without `<name>-` to its ceiling |
 | `quadlet_service_cpu` | `{}` | Container name without `<name>-` to its CPU quota, such as `50%` |
+| `quadlet_service_db_dump` | `{}` | A Postgres container to dump before each snapshot: `container`, `user` and `retention_days` |
 | `quadlet_service_restart` | `false` | `true` restarts the pod for a reason of the role |
 | `quadlet_service_extra_files` | `[]` | More files, each a `dest` and its `content` |
 
