@@ -19,9 +19,9 @@ The branch flow, the hooks, the releases and the house style are in
 - Order the Quadlet sections `[Unit] [Container] [Service] [Install]`.
   `quadlet_service` in `home-server` adds the drop-ins that `README.md`, "Role
   contract", lists. `quadlets/container.d/` of the service adds its own or
-  replaces one of them by name. A container carries only what is its own.
-  systemd applies a drop-in after the unit file, so you cannot override a key
-  that a drop-in sets. Pick another key instead.
+  replaces one of them by name, except `pod.conf`. A container carries only what
+  is its own. systemd applies a drop-in after the unit file, so you cannot
+  override a key that a drop-in sets. Pick another key instead.
 - A bind mount of a file this repository owns carries `z` (shared with the
   other containers of the pod) or `Z` (this container alone). Podman labels it
   for SELinux on each start, and nothing else does. A host path such as
