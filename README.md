@@ -122,6 +122,8 @@ The role creates its data directories, then imports `quadlet_service` from
 - checks `quadlet_service_required`, that `quadlet_service_memory` names
   every container and nothing else, and that `quadlet_service_cpu` names only
   containers.
+- with `quadlet_service_db_dump` set, runs `pg_dumpall` into the service
+  subvolume before each snapshot and prunes old dumps.
 - stores `quadlet_service_secrets` as Podman secrets. It replaces a secret
   whose value changed and then restarts the pod.
 - packs `quadlets/`, its own `container.d/` drop-ins and the extra files into
@@ -146,6 +148,7 @@ Nothing else writes into the Quadlet directory: the next change deletes it.
 | `quadlet_service_secrets` | `{}` | Secret name to its value; an empty value is an optional secret that is not set |
 | `quadlet_service_memory` | `{}` | Container name without `<name>-` to its ceiling |
 | `quadlet_service_cpu` | `{}` | Container name without `<name>-` to its CPU quota, such as `50%` |
+| `quadlet_service_db_dump` | `{}` | A Postgres container to dump before each snapshot: `container`, `user` and `retention_days` |
 | `quadlet_service_restart` | `false` | `true` restarts the pod for a reason of the role |
 | `quadlet_service_extra_files` | `[]` | More files, each a `dest` and its `content` |
 
