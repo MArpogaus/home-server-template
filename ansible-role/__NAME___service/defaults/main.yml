@@ -1,13 +1,10 @@
 ---
 __NAME___service_main_image: "docker.io/example/__NAME__:1"  # noqa: var-naming[pattern]
 
-# Required.
 __NAME___service_password: ""  # noqa: var-naming[pattern]
 
-# Empty: no public hostname.
 __NAME___service_hostname: ""  # noqa: var-naming[pattern]
 
-# The app's own settings, merged over __NAME___service_config_defaults in vars/main.yml.
 __NAME___service_config: {}  # noqa: var-naming[pattern]
-# Memory ceilings per container, merged over __NAME___service_memory_defaults.
 __NAME___service_memory: {}  # noqa: var-naming[pattern]
+__NAME___service_cpu: {}  # noqa: var-naming[pattern]

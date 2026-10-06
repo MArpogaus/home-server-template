@@ -31,12 +31,12 @@ outside this repository.
 home-server-__NAME__/
 ├── ansible-role/__NAME___service/
 │   ├── defaults/main.yml        What a user sets: images, credentials, overrides
-│   ├── vars/main.yml            What the role owns: config and memory defaults
+│   ├── vars/main.yml            What the role owns: config, memory and CPU defaults
 │   └── tasks/main.yml           Data directories, then import quadlet_service
 ├── quadlets/
 │   ├── __NAME__.pod.j2          Pod and published port
 │   ├── __NAME__-*.container.j2  Containers
-│   ├── container.d/             Drop-ins for every container of this service
+│   ├── container.d/             (optional) drop-ins for every container
 │   └── configs/                 Env and config files
 ├── monitoring/                  Rules, dashboards and log filters
 └── containers/                  (optional) build of an own image
@@ -50,6 +50,7 @@ home-server-__NAME__/
 | `__NAME___service_hostname` | empty | The public hostname |
 | `__NAME___service_config` | `{}` | The app's settings, merged over `__NAME___service_config_defaults` |
 | `__NAME___service_memory` | `{}` | Memory ceilings per container |
+| `__NAME___service_cpu` | `{}` | CPU quotas per container, such as `{main: 50%}` |
 | `__NAME___service_main_image` | `docker.io/example/__NAME__:1` | Image and tag |
 
 ## Configuration interface
@@ -65,13 +66,15 @@ the same way. A service has only the ones that apply to it.
 | `<name>_service_config_defaults` | `vars/main.yml` | The role's generic settings; `<name>_service_config` merges over them |
 | `<name>_service_memory` | `defaults/main.yml`, `{}` | Memory ceilings per container, keyed by the container name without `<name>-` |
 | `<name>_service_memory_defaults` | `vars/main.yml` | The ceilings the role ships |
+| `<name>_service_cpu` | `defaults/main.yml`, `{}` | CPU quotas per container, in the same keys; a container without one has no CPU limit |
+| `<name>_service_cpu_defaults` | `vars/main.yml` | The quotas the role ships, often `{}` |
 | `<name>_service_*_image` | `defaults/main.yml` | The images |
 | `port` of the `base_setup_services` entry | the deployment directory | The pod's loopback port, `service_port` in the role |
 
 - The defaults are generic: empty means off. A setting of one deployment, such
   as a country, belongs in its deployment directory.
 - The config merges recursively: a nested dict merges, a list replaces the
-  default list. The memory dict merges key by key. Set such a dict in one
+  default list. The memory and CPU dicts merge key by key. Set such a dict in one
   inventory file only, because a second file replaces it.
 - A service with a variable number of accounts takes one dict keyed by account
   name, such as `ntfy_service_users`, instead of one credential variable each.
@@ -116,16 +119,19 @@ of `base_setup` and write metrics into `base_setup_textfile_dir`.
 The role creates its data directories, then imports `quadlet_service` from
 `home-server`. `quadlet_service`:
 
-- checks `quadlet_service_required` and that `quadlet_service_memory` names
-  every container and nothing else.
+- checks `quadlet_service_required`, that `quadlet_service_memory` names
+  every container and nothing else, and that `quadlet_service_cpu` names only
+  containers.
 - stores `quadlet_service_secrets` as Podman secrets. It replaces a secret
   whose value changed and then restarts the pod.
 - packs `quadlets/`, its own `container.d/` drop-ins and the extra files into
   one reproducible archive. It renders each `.j2` file without the suffix and
-  copies the other files. It adds a `Memory=` drop-in per container. Its own
-  drop-ins put every container into `<name>.pod` and set the restart policy,
-  `AutoUpdate=registry`, `DropCapability=ALL`, `NoNewPrivileges=true` and
-  `PidsLimit=512`.
+  copies the other files. It adds a `Memory=` drop-in per container and a
+  `CPUQuota=` drop-in per CPU quota. Its own drop-ins put every container into
+  `<name>.pod` and set the restart policy, `AutoUpdate=registry`,
+  `DropCapability=ALL`, `NoNewPrivileges=true`, `PidsLimit=512` and
+  `LogDriver=passthrough`. A file of the same name in the service's
+  `container.d/` replaces one of them, except `pod.conf`.
 - compares the archive with the one it last unpacked on the host. When they
   differ, it deletes `~/.config/containers/systemd/` of the service user,
   unpacks the archive there, reloads the user manager and restarts
@@ -139,10 +145,11 @@ Nothing else writes into the Quadlet directory: the next change deletes it.
 | `quadlet_service_required` | `{}` | Variable name to a regex it must match; no regex means not empty |
 | `quadlet_service_secrets` | `{}` | Secret name to its value; an empty value is an optional secret that is not set |
 | `quadlet_service_memory` | `{}` | Container name without `<name>-` to its ceiling |
+| `quadlet_service_cpu` | `{}` | Container name without `<name>-` to its CPU quota, such as `50%` |
 | `quadlet_service_restart` | `false` | `true` restarts the pod for a reason of the role |
 | `quadlet_service_extra_files` | `[]` | More files, each a `dest` and its `content` |
 
-`vars/main.yml` of this skeleton sets the first three.
+`vars/main.yml` of this skeleton sets the first four.
 
 ## Monitoring
 
