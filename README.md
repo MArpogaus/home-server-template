@@ -131,7 +131,7 @@ The role creates its data directories, then imports `quadlet_service` from
   `<name>.pod` and set the restart policy, `AutoUpdate=registry`,
   `DropCapability=ALL`, `NoNewPrivileges=true`, `PidsLimit=512` and
   `LogDriver=passthrough`. A file of the same name in the service's
-  `container.d/` replaces one of them.
+  `container.d/` replaces one of them, except `pod.conf`.
 - compares the archive with the one it last unpacked on the host. When they
   differ, it deletes `~/.config/containers/systemd/` of the service user,
   unpacks the archive there, reloads the user manager and restarts
