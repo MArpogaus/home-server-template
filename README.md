@@ -31,12 +31,12 @@ outside this repository.
 home-server-__NAME__/
 ├── ansible-role/__NAME___service/
 │   ├── defaults/main.yml        What a user sets: images, credentials, overrides
-│   ├── vars/main.yml            What the role owns: config and memory defaults
+│   ├── vars/main.yml            What the role owns: config, memory and CPU defaults
 │   └── tasks/main.yml           Data directories, then import quadlet_service
 ├── quadlets/
 │   ├── __NAME__.pod.j2          Pod and published port
 │   ├── __NAME__-*.container.j2  Containers
-│   ├── container.d/             Drop-ins for every container of this service
+│   ├── container.d/             (optional) drop-ins for every container
 │   └── configs/                 Env and config files
 ├── monitoring/                  Rules, dashboards and log filters
 └── containers/                  (optional) build of an own image
@@ -129,7 +129,9 @@ The role creates its data directories, then imports `quadlet_service` from
   copies the other files. It adds a `Memory=` drop-in per container and a
   `CPUQuota=` drop-in per CPU quota. Its own drop-ins put every container into
   `<name>.pod` and set the restart policy, `AutoUpdate=registry`,
-  `DropCapability=ALL`, `NoNewPrivileges=true` and `PidsLimit=512`.
+  `DropCapability=ALL`, `NoNewPrivileges=true`, `PidsLimit=512` and
+  `LogDriver=passthrough`. A file of the same name in the service's
+  `container.d/` replaces one of them.
 - compares the archive with the one it last unpacked on the host. When they
   differ, it deletes `~/.config/containers/systemd/` of the service user,
   unpacks the archive there, reloads the user manager and restarts
