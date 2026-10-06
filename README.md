@@ -68,6 +68,7 @@ the same way. A service has only the ones that apply to it.
 | `<name>_service_memory_defaults` | `vars/main.yml` | The ceilings the role ships |
 | `<name>_service_cpu` | `defaults/main.yml`, `{}` | CPU quotas per container, in the same keys; a container without one has no CPU limit |
 | `<name>_service_cpu_defaults` | `vars/main.yml` | The quotas the role ships, often `{}` |
+| `<name>_service_db_dump_retention_days` | `defaults/main.yml`, `30` | Dump age before pruning; only a service that sets `quadlet_service_db_dump` |
 | `<name>_service_*_image` | `defaults/main.yml` | The images |
 | `port` of the `base_setup_services` entry | the deployment directory | The pod's loopback port, `service_port` in the role |
 
