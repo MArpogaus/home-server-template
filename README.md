@@ -74,7 +74,7 @@ the same way. A service has only the ones that apply to it.
 - The defaults are generic: empty means off. A setting of one deployment, such
   as a country, belongs in its deployment directory.
 - The config merges recursively: a nested dict merges, a list replaces the
-  default list. The memory dict merges key by key. Set such a dict in one
+  default list. The memory and CPU dicts merge key by key. Set such a dict in one
   inventory file only, because a second file replaces it.
 - A service with a variable number of accounts takes one dict keyed by account
   name, such as `ntfy_service_users`, instead of one credential variable each.
